@@ -1,49 +1,34 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import logo from './assets/electron.svg'
+const { ipcRenderer } = window as any
+
+const handleSendMessage = async () => {
+  const res = await ipcRenderer.invoke('system-info')
+  console.log("handleSendMessage:", res)
+  const params = {
+    title: 'Hello World',
+    message: 'This is a message from the main process!',
+    buttons: ['OK', 'Cancel']
+  }
+  ipcRenderer.invoke('echo',params).then((res: any) => {
+    console.log("echo:", res)
+  }).catch((err: any) => {
+    console.error("echo error:", err)
+  })
+}
+
 </script>
 
 <template>
-  <div class="flex w-full items-center justify-between p-4">
-    <a href="https://www.electronjs.org/" target="_blank">
-      <img src="./assets/electron.svg" class="logo electron" alt="Electron logo" />
-    </a>
-    <a href="https://vitejs.dev/" target="_blank">
-      <img src="./assets/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Electron + Vite + Vue" />
-  <div class="flex-center">
-    Place static files into the <code>/public</code> folder
-    <img style="width: 2.4em; margin-left: .4em;" src="/logo.svg" alt="Logo">
+  <div class="flex flex-col w-full items-center justify-between p-4 gap-8">
+    <el-image
+      :src="logo"
+      fit="contain"/>
+
+    <el-button type="primary" @click="handleSendMessage">
+      Open Window  
+    </el-button>  
   </div>
 </template>
 
-<style>
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo.electron:hover {
-  filter: drop-shadow(0 0 2em #9FEAF9);
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<style scoped lang="scss"></style>
