@@ -3,6 +3,9 @@ import logo from './assets/electron.svg'
 const { ipcRenderer } = window as any
 
 const handleSendMessage = async () => {
+
+  ipcRenderer.invoke('open-win', 'https://www.baidu.com')
+
   const res = await ipcRenderer.invoke('system-info')
   console.log("handleSendMessage:", res)
   const params = {

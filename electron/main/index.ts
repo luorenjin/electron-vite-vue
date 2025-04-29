@@ -4,6 +4,7 @@ import path from 'node:path'
 import os from 'node:os'
 
 import './service'
+import { c } from 'vite/dist/node/types.d-aGj9QkWt'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -58,6 +59,8 @@ async function createWindow() {
     },
   })
 
+  app.applicationMenu = null // Hide menu bar
+  
   if (VITE_DEV_SERVER_URL) { // #298
     win.loadURL(VITE_DEV_SERVER_URL)
     // Open devTool if the app is not packaged
@@ -106,6 +109,7 @@ app.on('activate', () => {
 
 // New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {
+  console.log('[Main-process] open-win:', arg)
   const childWindow = new BrowserWindow({
     autoHideMenuBar: true,
     webPreferences: {
@@ -115,6 +119,27 @@ ipcMain.handle('open-win', (_, arg) => {
     },
   })
 
+  if(arg.startsWith('http://') || arg.startsWith('https://')){
+    // Open external link in new window
+    childWindow.loadURL(arg)
+    childWindow.maximize()
+    childWindow.setMenu(null)
+    childWindow.setMenuBarVisibility(false)
+    childWindow.webContents.setWindowOpenHandler(({ url }) => {
+      // 对于其他链接，允许打开但自定义新窗口配置
+      return { 
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          autoHideMenuBar: true, // 确保新窗口也隐藏菜单栏
+          webPreferences: {
+            preload, // 使用相同的预加载脚本
+          }
+        }
+      }
+    })
+    return
+  }
+  
   if (VITE_DEV_SERVER_URL) {
     childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
   } else {
