@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'element-plus/dist/locale/zh-cn.mjs'
 import App from './App.vue'
+import router from './router'
 
 import './style.css'
 
@@ -13,6 +14,8 @@ import './types/ipc'
 
 createApp(App)
   .use(ElementPlus)
+  .use(router)
+  .provide('ipcRenderer', window.ipcRenderer)
   .mount('#app')
   .$nextTick(() => {
     postMessage({ payload: 'removeLoading' }, '*')

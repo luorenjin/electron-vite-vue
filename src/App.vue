@@ -1,38 +1,15 @@
 <script setup lang="ts">
-import logo from './assets/electron.svg'
-import { SYSTEM } from '../shared/events'
-const { ipcRenderer } = window as any
-
-const handleSendMessage = async () => {
-
-  ipcRenderer.invoke('open-win', 'https://www.baidu.com')
-
-  const res = await ipcRenderer.invoke(SYSTEM.SYSTEM_INFO)
-  console.log("handleSendMessage:", res)
-  const params = {
-    title: 'Hello World',
-    message: 'This is a message from the main process!',
-    buttons: ['OK', 'Cancel']
-  }
-  ipcRenderer.invoke(SYSTEM.ECHO,params).then((res: any) => {
-    console.log("echo:", res)
-  }).catch((err: any) => {
-    console.error("echo error:", err)
-  })
-}
-
+import { ref } from 'vue'
+import MainLayout from './layouts/MainLayout.vue';
+const size = ref('small')
 </script>
 
 <template>
-  <div class="flex flex-col w-full items-center justify-between p-4 gap-8">
-    <el-image
-      :src="logo"
-      fit="contain"/>
-
-    <el-button type="primary" @click="handleSendMessage">
-      Open Window  
-    </el-button>  
-  </div>
+  <el-config-provider :size="size" :z-index="3000">
+    <MainLayout>
+      <router-view/>
+    </MainLayout>
+  </el-config-provider>
 </template>
 
 <style scoped lang="scss"></style>

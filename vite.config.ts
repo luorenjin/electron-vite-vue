@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron/simple'
@@ -65,6 +66,11 @@ export default defineConfig(({ command }) => {
         renderer: {},
       }),
     ],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src')
+      }
+    },
     css: {
       preprocessorOptions: {
         scss: {
