@@ -1,4 +1,4 @@
-import { SYSTEM } from '../events'
+import { SYSTEM } from '../../../shared/events'
 import { ipcMain } from 'electron'
 import { getSystemInfo } from '../utils/system'
 

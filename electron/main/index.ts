@@ -2,9 +2,9 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
+import { SYSTEM } from '../../shared/events'
 
 import './service'
-import { c } from 'vite/dist/node/types.d-aGj9QkWt'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -108,7 +108,7 @@ app.on('activate', () => {
 })
 
 // New window example arg: new windows url
-ipcMain.handle('open-win', (_, arg) => {
+ipcMain.handle(SYSTEM.OPEN_WIN, (_, arg) => {
   console.log('[Main-process] open-win:', arg)
   const childWindow = new BrowserWindow({
     autoHideMenuBar: true,

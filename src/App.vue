@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import logo from './assets/electron.svg'
+import { SYSTEM } from '../shared/events'
 const { ipcRenderer } = window as any
 
 const handleSendMessage = async () => {
 
   ipcRenderer.invoke('open-win', 'https://www.baidu.com')
 
-  const res = await ipcRenderer.invoke('system-info')
+  const res = await ipcRenderer.invoke(SYSTEM.SYSTEM_INFO)
   console.log("handleSendMessage:", res)
   const params = {
     title: 'Hello World',
     message: 'This is a message from the main process!',
     buttons: ['OK', 'Cancel']
   }
-  ipcRenderer.invoke('echo',params).then((res: any) => {
+  ipcRenderer.invoke(SYSTEM.ECHO,params).then((res: any) => {
     console.log("echo:", res)
   }).catch((err: any) => {
     console.error("echo error:", err)
